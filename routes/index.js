@@ -17,9 +17,9 @@ router.post('/registro', (req, res) => {
     salt: salt
   })
   
-  newUser.save().then(user => console.log(user)).catch(err => console.log(err))
-
-  res.redirect('/login')
+  newUser.save().then().catch(err => {
+    res.json({message : err.message})
+  }).finally(() => res.redirect('/login'))
 })
 
 router.post('/login', passport.authenticate('local', { failureRedirect: '/login-failure', successRedirect: 'login-success' }));
@@ -62,11 +62,11 @@ router.get('/logout', (req, res) => {
   res.redirect('/protected-route');
 });
 
-router.get('/login-success', (req, res, next) => {
+router.get('/login-success', (req, res) => {
   res.send('<p>You successfully logged in. --> <a href="/protected-route">Go to protected route</a></p>');
 });
 
-router.get('/login-failure', (req, res, next) => {
+router.get('/login-failure', (req, res) => {
   res.send('You entered the wrong password.');
 });
 

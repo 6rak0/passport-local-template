@@ -7,7 +7,7 @@ module.exports.isAuth = (req, res, next) => {
 }
 
 module.exports.isAdmin = (req, res, next) => {
-  if (req.isAuthenticated() && req.user.admin) {
+  if (req.isAuthenticated() && req.user.isAdmin) {
       next();
   } else {
       res.status(401).json({ message: 'Acceso no autorizado, solo administradores.' });

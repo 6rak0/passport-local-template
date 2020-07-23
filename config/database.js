@@ -1,12 +1,18 @@
-require('dotenv').config()
-
 const mongoose = require('mongoose')
 
-const db = process.env.DB_URI
+require('dotenv').config()
 
-const connection = mongoose.createConnection(db , {
+const devConnection = process.env.DB_STRING
+const prodConnection = process.env.DB_STRING_PROD
+const options = {
   useNewUrlParser: true,
   useUnifiedTopology: true
-})
+}
 
-module.exports = connection
+if (process.env.NODE_ENV === 'production'){
+  mongoose.connect(prodConnection, options)
+  mongoose.connection.on('connected', () => console.log('conectado a la base de datos'))
+} else {
+  mongoose.connect(devConnection, options)
+  mongoose.connection.on('connected', () => console.log('conectado a la base de datos'))
+}

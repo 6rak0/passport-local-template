@@ -1,11 +1,11 @@
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
-const User = require('../models/user')
+const User = require('mongoose').model('User')
 const validatePassword = require('../lib/passwordUtils').validatePassword
 
 const strategy = new LocalStrategy((username, password, done) => {
   User.findOne({ username: username })
-  .then((user) => {
+  .then(user => {
     if(!user) return done(null, false)
     const isValid = validatePassword(password, user.hash, user.salt)
     if(isValid){
@@ -14,12 +14,10 @@ const strategy = new LocalStrategy((username, password, done) => {
       return done(null, false)
     }
   })
-  .catch((err) => {
+  .catch(err => {
     done(err)
   })
 })
-
-passport.use(strategy)
 
 passport.serializeUser((user, done) => {
   done(null, user.id)
@@ -30,3 +28,7 @@ passport.deserializeUser((userId, done) => {
   .then(user => done(null, user))
   .catch(err => done(err))
 })
+
+module.exports = (passport) => {
+  passport.use(strategy)
+}

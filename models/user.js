@@ -1,13 +1,11 @@
 const { Schema, model } = require('mongoose')
-const connection = require('../config/database')
 
-const UserSchema = new Schema({
+const User = new Schema({
   username: String,
   hash: String,
   salt: String,
   isAdmin: Boolean
 })
 
-const User = connection.model('User', UserSchema)
+model('User', User)
 
-module.exports = User
